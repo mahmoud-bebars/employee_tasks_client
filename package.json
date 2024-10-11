@@ -8,13 +8,13 @@
     "preview": "vite preview",
     "dev": "vite --host",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "clean:build": "rm -rf ./build",
+    "clean:build": "rm -rf ./dist",
     "clean:cache": "rm -rf ./node_modules/.cache/gh-pages",
     "clean:node": "rm -rf ./node_modules",
-    "clean": "rm -rf ./build && rm -rf ./node_modules",
-    "deploy": "gh-pages -d build -b gh-pages",
-    "live": "vite build && gh-pages -d build -b gh-pages && npm run clean && ntfy",
-    "deploy:test": "vite build --mode testing && gh-pages -d build -b gh-testing && rm -rf ./build && rm -rf ./node_modules/.cache/gh-pages"
+    "clean": "rm -rf ./dist && rm -rf ./node_modules/.cache/gh-pages",
+    "deploy": "gh-pages -d dist -b gh-pages",
+    "live": "vite build && gh-pages -d dist -b gh-pages && npm run clean",
+    "deploy:test": "vite build --mode testing && gh-pages -d dist -b gh-testing && rm -rf ./build && rm -rf ./node_modules/.cache/gh-pages"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.2",
