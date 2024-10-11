@@ -1,50 +1,31 @@
-# React + TypeScript + Vite
+# Employees Tasks Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
 
-Currently, two official plugins are available:
+This project is a simple web application that allows users to manage their tasks and employees. It provides a user-friendly interface for creating, updating, and deleting tasks and employees.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- Create, update, and delete tasks
+- Create, update, and delete employees
+- View a list of all tasks and employees
+- View details of a specific task or employee
+- Set Tasks with specfic Date & duartion (From,To)
+- Show tasks with specific date
+- View Total & Left Time for the tasks
+- View Total & Left Time for the employee
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Setup
 
-- Configure the top-level `parserOptions` property like this:
+- Clone the repository: `git clone https://github.com/mahmoud-bebars/employee_tasks_client.git`
+- Install the dependencies: `npm install`
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- Set Up Environment Variables:
+  - Create a .env file in the root directory of the project.
+  - Add the following environment variables to the .env file:
+  ```
+  VITE_API_URL="http://localhost:5000"
+  VITE_APP_TITLE="Employees Tasks"
+  ```
+- Start the server: `npm start`
+- Open the application in your browser: `http://localhost:3000`
