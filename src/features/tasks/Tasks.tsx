@@ -25,7 +25,7 @@ import {
 } from "../../components/ui/table";
 import { Button } from "../../components/ui/button";
 
-import { Trash2, XCircle } from "lucide-react";
+import { LoaderCircle, Trash2, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import DateSelector from "../../components/date-selector";
 
@@ -37,7 +37,7 @@ const MAX_WORK_HOURS_PER_DAY = 8; // we can adjust this value as needed
 
 export const Tasks = ({ employee, onClose }: Props) => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [deleteTask] = useDeleteTaskMutation();
+
   // Using a query hook automatically fetches data and returns query values
   const { data, isError, isLoading, isSuccess } = useGetTasksQuery(
     employee?.id,
@@ -45,16 +45,16 @@ export const Tasks = ({ employee, onClose }: Props) => {
 
   if (isError) {
     return (
-      <div>
-        <h1>There was an error!!!</h1>
+      <div className="w-full flex justify-center items-center h-full">
+        <h1 className="text-red-800 font-bold">There was an error!!!</h1>
       </div>
     );
   }
 
   if (isLoading) {
     return (
-      <div>
-        <h1>Loading...</h1>
+      <div className="w-full flex justify-center items-center h-full">
+        <LoaderCircle className=" animate-spin size-32" />
       </div>
     );
   }
@@ -76,13 +76,8 @@ export const Tasks = ({ employee, onClose }: Props) => {
     );
 
     const totalHours = calculateTotalHours(filteredTasks);
-    const remainingHours = Math.max(0, MAX_WORK_HOURS_PER_DAY - totalHours);
 
-    const calculateTaskDuration = (task: Task) => {
-      const start = moment(task.from);
-      const end = moment(task.to);
-      return moment.duration(end.diff(start)).asHours();
-    };
+    const remainingHours = Math.max(0, MAX_WORK_HOURS_PER_DAY - totalHours);
 
     return (
       <Card className="">
@@ -155,42 +150,13 @@ export const Tasks = ({ employee, onClose }: Props) => {
                     moment(selectedDate).format("DD/MM/YYYY"),
                 )
                 .map((task) => (
-                  <TableRow key={task.id}>
-                    <TableCell>
-                      <div className="font-medium">{task.description}</div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="font-medium">
-                        {moment(task.from).format("DD MMM, YYYY H:mm A")}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="font-medium">
-                        {moment(task.to).format("DD MMM, YYYY H:mm A")}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <TaskTimer task={task} />
-                    </TableCell>
-                    <TableCell className="flex items-center justify-end gap-2">
-                      <TaskDialog
-                        edit={true}
-                        task={task}
-                        employee={employee}
-                        selectedDate={selectedDate}
-                        remainingHours={
-                          remainingHours + calculateTaskDuration(task)
-                        }
-                      />
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => deleteTask(task.id)}
-                      >
-                        <Trash2 className="size-4 text-red-800" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
+                  <TaskRow
+                    key={task.id}
+                    task={task}
+                    employee={employee}
+                    selectedDate={selectedDate}
+                    remainingHours={remainingHours}
+                  />
                 ))}
             </TableBody>
           </Table>
@@ -200,6 +166,58 @@ export const Tasks = ({ employee, onClose }: Props) => {
   }
 
   return null;
+};
+
+const TaskRow = ({
+  task,
+  employee,
+  selectedDate,
+  remainingHours,
+}: {
+  task: Task;
+  employee: Employee;
+  selectedDate: Date;
+  remainingHours: number;
+}) => {
+  const [deleteTask] = useDeleteTaskMutation();
+  const calculateTaskDuration = (task: Task) => {
+    const start = moment(task.from);
+    const end = moment(task.to);
+    return moment.duration(end.diff(start)).asHours();
+  };
+
+  return (
+    <TableRow key={task.id}>
+      <TableCell>
+        <div className="font-medium">{task.description}</div>
+      </TableCell>
+      <TableCell>
+        <div className="font-medium">
+          {moment(task.from).format("DD MMM, YYYY H:mm A")}
+        </div>
+      </TableCell>
+      <TableCell>
+        <div className="font-medium">
+          {moment(task.to).format("DD MMM, YYYY H:mm A")}
+        </div>
+      </TableCell>
+      <TableCell>
+        <TaskTimer task={task} />
+      </TableCell>
+      <TableCell className="flex items-center justify-end gap-2">
+        <TaskDialog
+          edit={true}
+          task={task}
+          employee={employee}
+          selectedDate={selectedDate}
+          remainingHours={remainingHours + calculateTaskDuration(task)}
+        />
+        <Button variant="ghost" size="icon" onClick={() => deleteTask(task.id)}>
+          <Trash2 className="size-4 text-red-800" />
+        </Button>
+      </TableCell>
+    </TableRow>
+  );
 };
 
 const TaskTimer = ({ task }: { task: Task }) => {
